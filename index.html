@@ -60,6 +60,10 @@
         .error {
             background-color: #dc3545;
         }
+
+        .loading {
+            background-color: #2c3e50;
+        }
     </style>
 </head>
 <body>
@@ -89,7 +93,7 @@
 
             // Loading mesajı göster
             resultDiv.innerHTML = 'İndirme işlemi başlatılıyor...';
-            resultDiv.className = 'result';
+            resultDiv.className = 'result loading';
 
             try {
                 const response = await fetch(
@@ -110,7 +114,8 @@
                 }
             } catch (error) {
                 resultDiv.className = 'result error';
-                resultDiv.innerHTML = `Hata oluştu: ${error.message}`;
+                resultDiv.innerHTML = `Hata oluştu: ${error.message}<br>
+                                     <small>Not: Tarayıcınızda JavaScript'in etkinleştirilmiş olduğundan emin olun ve internet bağlantınızın sağlam olduğundan kontrol edin.</small>`;
             }
         }
     </script>
