@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        input {
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #fff;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #1DB954;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #198A42;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #17a673;
+        }
+
+        .error {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spotify Downloader</h1>
+        <p>Spotify'daki şarkıları kolayca indirebilmeniz için size yardımcı oluyoruz!</p>
+        
+        <div class="form-group">
+            <input type="text" id="spotifyUrl" placeholder="Spotify URL'yi buraya yapıştırın">
+        </div>
+        
+        <button onclick="downloadSpotifyTrack()">İndir</button>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function downloadSpotifyTrack() {
+            const url = document.getElementById('spotifyUrl').value;
+            const resultDiv = document.getElementById('result');
+            
+            if (!url) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = 'Lütfen bir Spotify URL'si giriniz!';
+                return;
+            }
+
+            resultDiv.innerHTML = 'İndirme işlemi başlatılıyor...';
+            resultDiv.className = 'result';
+
+            fetch(`https://tele-social.vercel.app/down?url=${url}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status && data.data.link) {
+                        resultDiv.className = 'result success';
+                        resultDiv.innerHTML = `<a href="${data.data.link}" download>Şarkıyı İndir</a>`;
+                    } else {
+                        resultDiv.className = 'result error';
+                        resultDiv.innerHTML = 'İndirme hatası oluştu. Geçerli bir Spotify URL'si olduğundan emin olun.';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+                });
+        }
+    </script>
+</body>
+</html>
