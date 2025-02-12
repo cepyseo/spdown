@@ -58,7 +58,7 @@
 <script>
     function downloadTrack() {
         const url = document.getElementById('trackUrl').value;
-        const apiUrl = `https://tele-social.vercel.app/down?url=${url}`;
+        const apiUrl = `https://cors-anywhere.herokuapp.com/https://tele-social.vercel.app/down?url=${url}`;
 
         if (!url) {
             document.getElementById('result').innerText = "Lütfen geçerli bir Spotify URL'si girin.";
