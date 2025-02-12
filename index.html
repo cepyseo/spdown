@@ -7,117 +7,73 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
+            background-color: #f0f0f0;
             padding: 20px;
         }
-
+        h1 {
+            color: #1DB954;
+        }
         .container {
             max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        .form-group {
-            margin: 20px 0;
-        }
-
-        input {
+        input[type="text"] {
+            width: 100%;
             padding: 10px;
-            width: 80%;
-            max-width: 400px;
-            border: none;
+            margin: 10px 0;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            background-color: #222;
-            color: #fff;
         }
-
         button {
-            padding: 10px 20px;
             background-color: #1DB954;
+            color: white;
+            padding: 10px;
             border: none;
             border-radius: 5px;
-            color: white;
             cursor: pointer;
-            transition: background-color 0.3s;
+            width: 100%;
         }
-
         button:hover {
-            background-color: #198A42;
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 5px;
-        }
-
-        .success {
-            background-color: #17a673;
-        }
-
-        .error {
-            background-color: #dc3545;
-        }
-
-        .loading {
-            background-color: #2c3e50;
+            background-color: #17a84a;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Spotify Downloader</h1>
-        <p>Spotify'daki şarkıları kolayca indirebilmeniz için size yardımcı oluyoruz!</p>
-        
-        <div class="form-group">
-            <input type="text" id="spotifyUrl" placeholder="Spotify URL'yi buraya yapıştırın">
-        </div>
-        
-        <button onclick="downloadSpotifyTrack()">İndir</button>
-        
-        <div id="result" class="result"></div>
-    </div>
 
-    <script>
-        async function downloadSpotifyTrack() {
-            const url = document.getElementById('spotifyUrl').value;
-            const resultDiv = document.getElementById('result');
-            
-            if (!url) {
-                resultDiv.className = 'result error';
-                resultDiv.innerHTML = 'Lütfen bir Spotify URL'si giriniz!';
-                return;
-            }
+<div class="container">
+    <h1>Spotify Downloader</h1>
+    <p>Spotify şarkı URL'sini girin ve indirin.</p>
+    <input type="text" id="trackUrl" placeholder="Spotify şarkı URL'si">
+    <button onclick="downloadTrack()">Şarkıyı İndir</button>
+    <p id="result"></p>
+</div>
 
-            // Loading mesajı göster
-            resultDiv.innerHTML = 'İndirme işlemi başlatılıyor...';
-            resultDiv.className = 'result loading';
+<script>
+    function downloadTrack() {
+        const url = document.getElementById('trackUrl').value;
+        const apiUrl = `https://tele-social.vercel.app/down?url=${url}`;
 
-            try {
-                const response = await fetch(
-                    `https://tele-social.vercel.app/down?url=${encodeURIComponent(url)}`
-                );
-
-                if (!response.ok) {
-                    throw new Error('API error');
-                }
-
-                const data = await response.json();
-
-                if (data.status && data.data.link) {
-                    resultDiv.className = 'result success';
-                    resultDiv.innerHTML = `<a href="${data.data.link}" download>Şarkıyı İndir</a>`;
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    const downloadLink = data.data.link;
+                    document.getElementById('result').innerHTML = 
+                        `<a href="${downloadLink}" target="_blank">İndir</a>`;
                 } else {
-                    throw new Error('Geçersiz cevap');
+                    document.getElementById('result').innerText = "Hata: Şarkı indirilemedi.";
                 }
-            } catch (error) {
-                resultDiv.className = 'result error';
-                resultDiv.innerHTML = `Hata oluştu: ${error.message}<br>
-                                     <small>Not: Tarayıcınızda JavaScript'in etkinleştirilmiş olduğundan emin olun ve internet bağlantınızın sağlam olduğundan kontrol edin.</small>`;
-            }
-        }
-    </script>
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = "Bir hata oluştu.";
+                console.error('Error:', error);
+            });
+    }
+</script>
+
 </body>
 </html>
