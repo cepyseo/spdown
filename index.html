@@ -58,7 +58,7 @@
 <script>
     function downloadTrack() {
         const url = document.getElementById('trackUrl').value;
-        const apiUrl = `https://cors-anywhere.herokuapp.com/https://tele-social.vercel.app/down?url=${url}`;
+        const apiUrl = `https://api.allorigins.win/get?url=https://tele-social.vercel.app/down?url=${url}`;
 
         if (!url) {
             document.getElementById('result').innerText = "Lütfen geçerli bir Spotify URL'si girin.";
@@ -73,8 +73,9 @@
                 return response.json();
             })
             .then(data => {
-                if (data.status) {
-                    const downloadLink = data.data.link;
+                const jsonData = JSON.parse(data.contents);
+                if (jsonData.status) {
+                    const downloadLink = jsonData.data.link;
                     document.getElementById('result').innerHTML = 
                         `<a href="${downloadLink}" target="_blank">İndir</a>`;
                 } else {
