@@ -99,7 +99,10 @@
         try {
             resultDiv.innerHTML = '<p style="text-align: center">İndirme hazırlanıyor...</p>';
             
-            const response = await fetch('https://api.spotifydown.com/download', {
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+            const targetUrl = 'https://api.spotifydown.com/download';
+            
+            const response = await fetch(proxyUrl + targetUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
