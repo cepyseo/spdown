@@ -43,6 +43,13 @@
         #result {
             margin-top: 10px;
         }
+        .track-info {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
     </style>
 </head>
 <body>
@@ -58,13 +65,14 @@
 <script>
     function downloadTrack() {
         const url = document.getElementById('trackUrl').value;
-        const apiUrl = `https://api.allorigins.win/get?url=https://tele-social.vercel.app/down?url=${url}`;
-
+        const apiUrl = `https://tele-social.vercel.app/down?url=${url}`;
+        
         if (!url) {
             document.getElementById('result').innerText = "Lütfen geçerli bir Spotify URL'si girin.";
             return;
         }
 
+        // Şarkı bilgilerini almak için API çağrısı
         fetch(apiUrl)
             .then(response => {
                 if (!response.ok) {
@@ -73,11 +81,15 @@
                 return response.json();
             })
             .then(data => {
-                const jsonData = JSON.parse(data.contents);
-                if (jsonData.status) {
-                    const downloadLink = jsonData.data.link;
-                    document.getElementById('result').innerHTML = 
-                        `<a href="${downloadLink}" target="_blank">İndir</a>`;
+                if (data.status) {
+                    const downloadLink = data.data.link;
+                    const trackInfo = `
+                        <div class="track-info">
+                            <strong>Şarkı İndirilebilir!</strong><br>
+                            <a href="${downloadLink}" target="_blank">İndir</a>
+                        </div>
+                    `;
+                    document.getElementById('result').innerHTML = trackInfo;
                 } else {
                     document.getElementById('result').innerText = "Hata: Şarkı indirilemedi.";
                 }
