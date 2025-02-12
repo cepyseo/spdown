@@ -7,48 +7,72 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #121212;
+            color: white;
             padding: 20px;
+            margin: 0;
         }
         h1 {
             color: #1DB954;
+            text-align: center;
         }
         .container {
             max-width: 600px;
             margin: auto;
-            background: white;
-            padding: 20px;
+            background: #282828;
+            padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
         input[type="text"] {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
+            padding: 12px;
+            margin: 15px 0;
+            border: none;
             border-radius: 5px;
+            background: #404040;
+            color: white;
+            box-sizing: border-box;
+        }
+        input[type="text"]::placeholder {
+            color: #b3b3b3;
         }
         button {
             background-color: #1DB954;
             color: white;
-            padding: 10px;
+            padding: 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             width: 100%;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #17a84a;
+            background-color: #1ed760;
         }
         #result {
-            margin-top: 10px;
+            margin-top: 20px;
         }
         .track-info {
-            margin-top: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
+            margin-top: 20px;
+            padding: 15px;
             border-radius: 5px;
-            background: #f9f9f9;
+            background: #404040;
+        }
+        .track-info a {
+            color: #1DB954;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .track-info a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #ff5252;
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -57,47 +81,51 @@
 <div class="container">
     <h1>Spotify Downloader</h1>
     <p>Spotify şarkı URL'sini girin ve indirin.</p>
-    <input type="text" id="trackUrl" placeholder="Spotify şarkı URL'si">
+    <input type="text" id="trackUrl" placeholder="Spotify şarkı URL'si yapıştırın">
     <button onclick="downloadTrack()">Şarkıyı İndir</button>
-    <p id="result"></p>
+    <div id="result"></div>
 </div>
 
 <script>
-    function downloadTrack() {
-        const url = document.getElementById('trackUrl').value;
-        const apiUrl = `https://tele-social.vercel.app/down?url=${url}`;
+    async function downloadTrack() {
+        const resultDiv = document.getElementById('result');
+        const url = document.getElementById('trackUrl').value.trim();
         
         if (!url) {
-            document.getElementById('result').innerText = "Lütfen geçerli bir Spotify URL'si girin.";
+            resultDiv.innerHTML = '<p class="error">Lütfen geçerli bir Spotify URL\'si girin.</p>';
             return;
         }
 
-        // Şarkı bilgilerini almak için API çağrısı
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Ağ hatası: " + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status) {
-                    const downloadLink = data.data.link;
-                    const trackInfo = `
-                        <div class="track-info">
-                            <strong>Şarkı İndirilebilir!</strong><br>
-                            <a href="${downloadLink}" target="_blank">İndir</a>
-                        </div>
-                    `;
-                    document.getElementById('result').innerHTML = trackInfo;
-                } else {
-                    document.getElementById('result').innerText = "Hata: Şarkı indirilemedi.";
-                }
-            })
-            .catch(error => {
-                document.getElementById('result').innerText = "Bir hata oluştu: " + error.message;
-                console.error('Error:', error);
-            });
+        try {
+            resultDiv.innerHTML = '<p style="text-align: center">İndirme hazırlanıyor...</p>';
+            
+            const response = await fetch(`https://spotify-downloader-api.vercel.app/download?url=${encodeURIComponent(url)}`);
+            
+            if (!response.ok) {
+                throw new Error('İndirme işlemi başarısız oldu');
+            }
+
+            const data = await response.json();
+
+            if (data.success && data.downloadUrl) {
+                const trackInfo = `
+                    <div class="track-info">
+                        <p style="text-align: center"><strong>Şarkı indirmeye hazır!</strong></p>
+                        <p style="text-align: center">
+                            <a href="${data.downloadUrl}" target="_blank" rel="noopener noreferrer">
+                                İndirmeyi Başlat
+                            </a>
+                        </p>
+                    </div>
+                `;
+                resultDiv.innerHTML = trackInfo;
+            } else {
+                throw new Error('Şarkı bulunamadı veya indirilemedi');
+            }
+        } catch (error) {
+            resultDiv.innerHTML = `<p class="error">${error.message}</p>`;
+            console.error('Hata:', error);
+        }
     }
 </script>
 
