@@ -40,6 +40,9 @@
         button:hover {
             background-color: #17a84a;
         }
+        #result {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -57,8 +60,18 @@
         const url = document.getElementById('trackUrl').value;
         const apiUrl = `https://tele-social.vercel.app/down?url=${url}`;
 
+        if (!url) {
+            document.getElementById('result').innerText = "Lütfen geçerli bir Spotify URL'si girin.";
+            return;
+        }
+
         fetch(apiUrl)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Ağ hatası: " + response.status);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.status) {
                     const downloadLink = data.data.link;
@@ -69,7 +82,7 @@
                 }
             })
             .catch(error => {
-                document.getElementById('result').innerText = "Bir hata oluştu.";
+                document.getElementById('result').innerText = "Bir hata oluştu: " + error.message;
                 console.error('Error:', error);
             });
     }
