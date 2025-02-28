@@ -3,144 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Downloader</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-            padding: 20px;
-            margin: 0;
-        }
-        h1 {
-            color: #1DB954;
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: #282828;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
-            border: none;
-            border-radius: 5px;
-            background: #404040;
-            color: white;
-            box-sizing: border-box;
-        }
-        input[type="text"]::placeholder {
-            color: #b3b3b3;
-        }
-        button {
-            background-color: #1DB954;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #1ed760;
-        }
-        #result {
-            margin-top: 20px;
-        }
-        .track-info {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 5px;
-            background: #404040;
-        }
-        .track-info a {
-            color: #1DB954;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .track-info a:hover {
-            text-decoration: underline;
-        }
-        .error {
-            color: #ff5252;
-            text-align: center;
-            margin-top: 10px;
-        }
-    </style>
+    <title>AI Hub - Yapay Zeka Sohbet</title>
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap">
+    <!-- Stil dosyaları -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <!-- Script dosyaları -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
 </head>
 <body>
+    <!-- Yükleme Animasyonu -->
+    <div class="loader-container">
+        <div class="dot-spinner">
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+            <div class="dot-spinner__dot"></div>
+        </div>
+        <p>AI Hub yükleniyor...</p>
+    </div>
 
-<div class="container">
-    <h1>Spotify Downloader</h1>
-    <p>Spotify şarkı URL'sini girin ve indirin.</p>
-    <input type="text" id="trackUrl" placeholder="Spotify şarkı URL'si yapıştırın">
-    <button onclick="downloadTrack()">Şarkıyı İndir</button>
-    <div id="result"></div>
-</div>
-
-<script>
-    async function downloadTrack() {
-        const resultDiv = document.getElementById('result');
-        const url = document.getElementById('trackUrl').value.trim();
-        
-        if (!url) {
-            resultDiv.innerHTML = '<p class="error">Lütfen geçerli bir Spotify URL\'si girin.</p>';
-            return;
-        }
-
-        try {
-            resultDiv.innerHTML = '<p style="text-align: center">İndirme hazırlanıyor...</p>';
+    <!-- Ana Uygulama -->
+    <div class="app-container">
+        <!-- Yan Menü -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">AI Hub Sohbetler</div>
+                <button id="newChatBtn" class="new-chat-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Yeni Sohbet
+                </button>
+            </div>
             
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const targetUrl = 'https://api.spotifydown.com/download';
+            <div class="theme-switcher">
+                <button id="darkTheme" class="theme-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    Koyu
+                </button>
+                <button id="lightTheme" class="theme-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    Açık
+                </button>
+            </div>
             
-            const response = await fetch(proxyUrl + targetUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Origin': 'https://spotifydown.com',
-                    'Referer': 'https://spotifydown.com/',
-                },
-                body: JSON.stringify({
-                    url: url
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error('İndirme işlemi başarısız oldu');
-            }
+            <!-- Konuşma Listesi -->
+            <div class="conversations-container" id="conversationsList">
+                <!-- Konuşmalar JavaScript ile buraya eklenecek -->
+            </div>
+        </aside>
 
-            const data = await response.json();
+        <!-- Mobil Menü Açma Butonu -->
+        <button class="toggle-sidebar" id="toggleSidebar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
 
-            if (data.success && data.downloadUrl) {
-                const trackInfo = `
-                    <div class="track-info">
-                        <p style="text-align: center"><strong>${data.metadata?.title || 'Şarkı'} indirmeye hazır!</strong></p>
-                        <p style="text-align: center">
-                            <a href="${data.downloadUrl}" target="_blank" rel="noopener noreferrer">
-                                İndirmeyi Başlat
-                            </a>
-                        </p>
-                    </div>
-                `;
-                resultDiv.innerHTML = trackInfo;
-            } else {
-                throw new Error('Şarkı bulunamadı veya indirilemedi');
-            }
-        } catch (error) {
-            resultDiv.innerHTML = `<p class="error">${error.message}</p>`;
-            console.error('Hata:', error);
-        }
-    }
-</script>
+        <!-- Ana İçerik -->
+        <main class="content">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Mesajlar JavaScript ile buraya eklenecek -->
+                </div>
+                <div class="chat-input-container">
+                    <textarea id="messageInput" placeholder="Bir mesaj yazın..." rows="1"></textarea>
+                    <button id="sendButton" class="send-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
 
+    <script src="app.js"></script>
 </body>
-</html>
+</html> 
