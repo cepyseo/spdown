@@ -24,7 +24,7 @@
     </div>
 
     <script>
-        const API_KEY = 'AIzaSyD6AKeySyigiqIqtPOo5-wCi5_28RUM-zQ';
+        const API_KEY = 'YOUR_API_KEY_HERE'; // API anahtarınızı buraya girin
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
         async function generateResponse() {
@@ -51,6 +51,10 @@
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP hata kodu: ${response.status}`);
+                }
+
                 const data = await response.json();
                 const formattedResponse = data.candidates[0].content.parts[0].text
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -72,7 +76,7 @@
 
             } catch (error) {
                 console.error('Hata:', error);
-                responseArea.innerHTML += '<div class="error-message">⚠️ Bir hata oluştu. Lütfen tekrar deneyin.</div>';
+                responseArea.innerHTML += `<div class="error-message">⚠️ ${error.message}</div>`;
             }
         }
     </script>
