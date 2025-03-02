@@ -1,110 +1,80 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>AI Hub - DeepSeek Sohbet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek AI Chat</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Highlight.js CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
-    <!-- Marked.js ve Highlight.js -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <!-- DOMPurify için -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
-    <!-- Mobil cihazlar için dokunmatik iyileştirmeler -->
-    <script>
-        // Çift dokunma yakınlaştırmasını engelle
-        document.addEventListener('touchstart', function(event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-        
-        // Pinch yakınlaştırmasını engelle
-        document.addEventListener('touchmove', function(event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
-    </script>
 </head>
 <body>
-    <!-- Yükleme Animasyonu -->
-    <div class="loader-container">
-        <div class="loader"></div>
-        <p>AI Hub yükleniyor...</p>
-    </div>
+    <nav>
+        <div class="container">
+            <h1>DeepSeek AI</h1>
+        </div>
+    </nav>
 
     <div class="container">
-        <!-- Yan Menü -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>Konuşmalarım</h2>
-                <button id="newChatBtn" class="new-chat-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    Yeni Konuşma
-                </button>
-            </div>
-            <div id="conversationsList" class="conversations-list">
-                <!-- Konuşmalar buraya eklenecek -->
-            </div>
-            <div class="theme-switcher">
-                <button id="darkTheme" class="theme-btn active">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    Koyu Tema
-                </button>
-                <button id="lightTheme" class="theme-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                    Açık Tema
-                </button>
-            </div>
-        </div>
-
-        <!-- Ana İçerik -->
-        <div class="content">
-            <button id="toggleSidebar" class="toggle-sidebar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <div class="chat-container">
-                <div id="chatMessages" class="chat-messages">
-                    <!-- Mesajlar buraya eklenecek -->
-                </div>
-                <div class="input-container">
-                    <textarea id="messageInput" placeholder="Bir mesaj yazın..." rows="1"></textarea>
-                    <button id="sendButton">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
-                </div>
+        <div id="chat-container">
+            <div id="response-area"></div>
+            <div class="input-group">
+                <input type="text" id="user-input" placeholder="AI'ya mesajınızı yazın...">
+                <button onclick="generateResponse()">Gönder</button>
             </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        const API_KEY = 'AIzaSyD6AKeySyigiqIqtPOo5-wCi5_28RUM-zQ';
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+
+        async function generateResponse() {
+            const userInput = document.getElementById('user-input');
+            const responseArea = document.getElementById('response-area');
+            
+            if(!userInput.value.trim()) {
+                alert('Lütfen bir mesaj girin!');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: userInput.value
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                const formattedResponse = data.candidates[0].content.parts[0].text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+
+                responseArea.innerHTML += `
+                    <div class="message user-message">
+                        <div class="avatar">👤</div>
+                        <div class="content">${userInput.value}</div>
+                    </div>
+                    <div class="message ai-message">
+                        <div class="avatar">🤖</div>
+                        <div class="content">${formattedResponse}</div>
+                    </div>
+                `;
+                
+                userInput.value = '';
+                responseArea.scrollTop = responseArea.scrollHeight;
+
+            } catch (error) {
+                console.error('Hata:', error);
+                responseArea.innerHTML += '<div class="error-message">⚠️ Bir hata oluştu. Lütfen tekrar deneyin.</div>';
+            }
+        }
+    </script>
 </body>
 </html>
