@@ -1,83 +1,751 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DeepSeek AI Chat</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Advanced Combo Checker Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #0a192f;
+            --secondary-bg: #112240;
+            --accent-color: #64ffda;
+            --text-primary: #ccd6f6;
+            --text-secondary: #8892b0;
+            --danger-color: #ff6b6b;
+            --warning-color: #ffd93d;
+            --success-color: #64ffda;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: var(--secondary-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.1);
+        }
+
+        .header h1 {
+            color: var(--accent-color);
+            margin: 0;
+        }
+
+        .panel {
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.1);
+        }
+
+        .panel-title {
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: monospace;
+        }
+
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        button:hover {
+            background: rgba(100, 255, 218, 0.1);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary { color: var(--accent-color); }
+        .btn-danger { color: var(--danger-color); border-color: var(--danger-color); }
+        .btn-warning { color: var(--warning-color); border-color: var(--warning-color); }
+
+        .download-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            font-size: 0.9em;
+        }
+
+        .download-btn:hover {
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        .progress-container {
+            background: var(--primary-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: var(--primary-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--accent-color);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .status-item {
+            background: var(--primary-bg);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid var(--accent-color);
+        }
+
+        .status-item .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .log-container {
+            background: var(--primary-bg);
+            padding: 15px;
+            border-radius: 5px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            border: 1px solid var(--accent-color);
+        }
+
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .log-success { color: var(--success-color); }
+        .log-error { color: var(--danger-color); }
+        .log-info { color: var(--text-primary); }
+        .log-warning { color: var(--warning-color); }
+
+        .ai-result {
+            background: var(--primary-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid var(--accent-color);
+        }
+
+        .ai-result h4 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .risk-high { color: var(--danger-color); }
+        .risk-medium { color: var(--warning-color); }
+        .risk-low { color: var(--success-color); }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--secondary-bg);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+            .download-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        <div class="container">
-            <h1>DeepSeek AI</h1>
-        </div>
-    </nav>
-
     <div class="container">
-        <div id="chat-container">
-            <div id="response-area"></div>
+        <div class="header">
+            <h1>Advanced Combo Checker Pro</h1>
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">Configuration</h2>
             <div class="input-group">
-                <input type="text" id="user-input" placeholder="AI'ya mesajınızı yazın...">
-                <button onclick="generateResponse()">Gönder</button>
+                <label>Primary API URL</label>
+                <input type="url" id="primaryApiUrl" value="https://api-y5s2.onrender.com/ask">
             </div>
+            <div class="input-group">
+                <label>Backup API URL</label>
+                <input type="url" id="backupApiUrl" value="https://api-backup.onrender.com/ask">
+            </div>
+            <div class="input-group">
+                <label>AI Model</label>
+                <input type="text" id="aiModel" value="gpt-4">
+            </div>
+            <div class="input-group">
+                <label>Request Delay (ms)</label>
+                <input type="number" id="requestDelay" value="1000" min="0">
+            </div>
+            <div class="input-group">
+                <label>Max Retry Attempts</label>
+                <input type="number" id="maxRetries" value="3" min="1" max="5">
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">Input</h2>
+            <div class="input-group">
+                <label>Upload Combo File</label>
+                <input type="file" id="comboFile" accept=".txt">
+            </div>
+            <div class="input-group">
+                <label>Combo List (url:email:password)</label>
+                <textarea id="comboInput" placeholder="Enter your combos here..."></textarea>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="startBtn" class="btn-primary" onclick="startChecking()">
+                <i class="fas fa-play"></i> Start
+            </button>
+            <button id="stopBtn" class="btn-danger" onclick="stopChecking()" disabled>
+                <i class="fas fa-stop"></i> Stop
+            </button>
+            <button id="clearBtn" class="btn-warning" onclick="clearAll()">
+                <i class="fas fa-trash"></i> Clear All
+            </button>
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">Downloads</h2>
+            <div class="download-buttons">
+                <button class="download-btn" onclick="downloadSuccessResults()">
+                    <i class="fas fa-download"></i> Success List
+                </button>
+                <button class="download-btn" onclick="downloadFailedResults()">
+                    <i class="fas fa-download"></i> Failed List
+                </button>
+                <button class="download-btn" onclick="downloadAIAnalysis()">
+                    <i class="fas fa-download"></i> AI Analysis
+                </button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">Progress</h2>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div>Total</div>
+                    <div id="totalCount" class="value">0</div>
+                </div>
+                <div class="status-item">
+                    <div>Checked</div>
+                    <div id="checkedCount" class="value">0</div>
+                </div>
+                <div class="status-item">
+                    <div>Success</div>
+                    <div id="successCount" class="value">0</div>
+                </div>
+                <div class="status-item">
+                    <div>Failed</div>
+                    <div id="failedCount" class="value">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">Log</h2>
+            <div id="logContainer" class="log-container"></div>
+        </div>
+
+        <div class="panel">
+            <h2 class="panel-title">AI Analysis</h2>
+            <div id="spinner" class="spinner"></div>
+            <div id="aiResults"></div>
         </div>
     </div>
 
     <script>
-        const API_KEY = 'YOUR_API_KEY_HERE'; // API anahtarınızı buraya girin
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+        let isChecking = false;
+        let totalCombos = 0;
+        let checkedCombos = 0;
+        let successCount = 0;
+        let failedCount = 0;
+        let successResults = [];
+        let failedResults = [];
+        let aiAnalysisResults = [];
 
-        async function generateResponse() {
-            const userInput = document.getElementById('user-input');
-            const responseArea = document.getElementById('response-area');
-            
-            if(!userInput.value.trim()) {
-                alert('Lütfen bir mesaj girin!');
-                return;
-            }
-
+        document.getElementById('comboFile').addEventListener('change', async (e) => {
             try {
-                const response = await fetch(API_URL, {
+                const file = e.target.files[0];
+                if (file) {
+                    const text = await file.text();
+                    document.getElementById('comboInput').value = text;
+                    log(`File loaded: ${file.name}`, 'success');
+                }
+            } catch (error) {
+                log(`Error loading file: ${error.message}`, 'error');
+            }
+        });
+
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateProgress() {
+            const progress = (checkedCombos / totalCombos) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('totalCount').textContent = totalCombos;
+            document.getElementById('checkedCount').textContent = checkedCombos;
+            document.getElementById('successCount').textContent = successCount;
+            document.getElementById('failedCount').textContent = failedCount;
+        }
+
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'block';
+        }
+
+        function hideSpinner() {
+            document.getElementById('spinner').style.display = 'none';
+        }
+
+        async function makeAPICall(prompt, attempt = 1) {
+            const maxRetries = parseInt(document.getElementById('maxRetries').value);
+            const primaryApiUrl = document.getElementById('primaryApiUrl').value;
+            const backupApiUrl = document.getElementById('backupApiUrl').value;
+            
+            try {
+                const endpoint = attempt <= maxRetries ? primaryApiUrl : backupApiUrl;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: userInput.value
-                            }]
-                        }]
-                    })
+                    body: JSON.stringify({ prompt: prompt }),
+                    signal: controller.signal
                 });
 
+                clearTimeout(timeoutId);
+
                 if (!response.ok) {
-                    throw new Error(`HTTP hata kodu: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                const formattedResponse = data.candidates[0].content.parts[0].text
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\n/g, '<br>');
-
-                responseArea.innerHTML += `
-                    <div class="message user-message">
-                        <div class="avatar">👤</div>
-                        <div class="content">${userInput.value}</div>
-                    </div>
-                    <div class="message ai-message">
-                        <div class="avatar">🤖</div>
-                        <div class="content">${formattedResponse}</div>
-                    </div>
-                `;
                 
-                userInput.value = '';
-                responseArea.scrollTop = responseArea.scrollHeight;
+                if (!data || !data.answer) {
+                    throw new Error('Invalid API response format');
+                }
+
+                return data;
 
             } catch (error) {
-                console.error('Hata:', error);
-                responseArea.innerHTML += `<div class="error-message">⚠️ ${error.message}</div>`;
+                if (attempt < maxRetries * 2) {
+                    log(`API call failed, retrying... (${attempt}/${maxRetries * 2})`, 'warning');
+                    const delay = 1000 * Math.pow(2, attempt - 1);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return makeAPICall(prompt, attempt + 1);
+                }
+                throw error;
             }
+        }
+
+        async function analyzeWithAI(combo) {
+            try {
+                showSpinner();
+                const [url, email, password] = combo.split(':');
+                
+                if (!url || !email || !password) {
+                    throw new Error('Invalid combo format');
+                }
+
+                const prompt = `Analyze login combination:
+                URL: ${url}
+                Email: ${email}
+                Password: ${password}
+
+                Return JSON only with this format:
+                {
+                    "authSystem": {
+                        "endpoint": "/login",
+                        "method": "POST",
+                        "security": ["SSL", "Rate Limiting"]
+                    },
+                    "credentialSecurity": {
+                        "passwordStrength": "medium",
+                        "vulnerabilities": ["Common Password"],
+                        "riskLevel": "medium"
+                    },
+                    "accessStrategy": {
+                        "headers": {
+                            "User-Agent": "Mozilla/5.0",
+                            "Accept": "application/json"
+                        },
+                        "antiBot": ["Captcha", "IP Check"]
+                    },
+                    "recommendation": "Use with caution"
+                }`;
+
+                const response = await makeAPICall(prompt);
+                
+                if (!response || !response.answer) {
+                    throw new Error('Invalid API response');
+                }
+
+                let analysis;
+                try {
+                    analysis = JSON.parse(response.answer);
+                } catch (e) {
+                    throw new Error('Invalid JSON response');
+                }
+
+                if (!analysis || !analysis.authSystem || !analysis.credentialSecurity) {
+                    throw new Error('Incomplete analysis data');
+                }
+
+                return analysis;
+
+            } catch (error) {
+                log(`AI Analysis error for ${combo}: ${error.message}`, 'error');
+                return {
+                    authSystem: {
+                        endpoint: "/login",
+                        method: "POST",
+                        security: ["Unknown"]
+                    },
+                    credentialSecurity: {
+                        passwordStrength: "unknown",
+                        vulnerabilities: ["Analysis Failed"],
+                        riskLevel: "high"
+                    },
+                    accessStrategy: {
+                        headers: {
+                            "User-Agent": "Mozilla/5.0"
+                        },
+                        antiBot: ["Unknown"]
+                    },
+                    recommendation: "Analysis failed, proceed with caution"
+                };
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function displayAIAnalysis(analysis, combo) {
+            const aiResults = document.getElementById('aiResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'ai-result';
+
+            const riskClass = analysis.credentialSecurity.riskLevel.toLowerCase() === 'high' ? 'risk-high' : 
+                            analysis.credentialSecurity.riskLevel.toLowerCase() === 'medium' ? 'risk-medium' : 'risk-low';
+
+            resultDiv.innerHTML = `
+                <h4>Analysis for: ${combo}</h4>
+                <div class="analysis-section">
+                    <strong>Authentication System:</strong><br>
+                    Endpoint: ${analysis.authSystem.endpoint}<br>
+                    Method: ${analysis.authSystem.method}<br>
+                    Security Measures: ${analysis.authSystem.security.join(', ')}<br>
+                </div>
+                <div class="analysis-section">
+                    <strong>Security Assessment:</strong><br>
+                    Password Strength: ${analysis.credentialSecurity.passwordStrength}<br>
+                    Risk Level: <span class="${riskClass}">${analysis.credentialSecurity.riskLevel}</span><br>
+                    Vulnerabilities: ${analysis.credentialSecurity.vulnerabilities.join(', ')}<br>
+                </div>
+                <div class="analysis-section">
+                    <strong>Access Strategy:</strong><br>
+                    Required Headers: ${Object.keys(analysis.accessStrategy.headers).join(', ')}<br>
+                    Anti-Bot Measures: ${analysis.accessStrategy.antiBot.join(', ')}<br>
+                </div>
+                <div class="analysis-section">
+                    <strong>Recommendation:</strong><br>
+                    ${analysis.recommendation}
+                </div>
+            `;
+
+            aiResults.appendChild(resultDiv);
+            aiAnalysisResults.push({combo, analysis});
+        }
+
+        function downloadSuccessResults() {
+            if (successResults.length === 0) {
+                log('No success results to download', 'warning');
+                return;
+            }
+            const blob = new Blob([successResults.join('\n')], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `success_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log('Success results downloaded', 'success');
+        }
+
+        function downloadFailedResults() {
+            if (failedResults.length === 0) {
+                log('No failed results to download', 'warning');
+                return;
+            }
+            const blob = new Blob([failedResults.join('\n')], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `failed_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log('Failed results downloaded', 'success');
+        }
+
+        function downloadAIAnalysis() {
+            if (aiAnalysisResults.length === 0) {
+                log('No AI analysis results to download', 'warning');
+                return;
+            }
+            const blob = new Blob([JSON.stringify(aiAnalysisResults, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ai_analysis_${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            log('AI analysis results downloaded', 'success');
+        }
+
+        async function checkCombo(combo) {
+            try {
+                const analysis = await analyzeWithAI(combo);
+                if (analysis) {
+                    displayAIAnalysis(analysis, combo);
+                    
+                    if (analysis.credentialSecurity.riskLevel.toLowerCase() === 'high') {
+                        failedCount++;
+                        failedResults.push(combo);
+                        log(`Failed: ${combo} (High Risk)`, 'error');
+                        return false;
+                    }
+
+                    successCount++;
+                    successResults.push(combo);
+                    log(`Success: ${combo}`, 'success');
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                failedCount++;
+                failedResults.push(combo);
+                log(`Failed: ${combo} (${error.message})`, 'error');
+                return false;
+            }
+        }
+
+        async function startChecking() {
+            try {
+                const combos = document.getElementById('comboInput').value
+                    .trim()
+                    .split('\n')
+                    .filter(line => line.trim() && line.includes(':'));
+
+                if (combos.length === 0) {
+                    log('No valid combos found!', 'error');
+                    return;
+                }
+
+                isChecking = true;
+                totalCombos = combos.length;
+                checkedCombos = 0;
+                successCount = 0;
+                failedCount = 0;
+                successResults = [];
+                failedResults = [];
+                aiAnalysisResults = [];
+
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('comboInput').disabled = true;
+                document.getElementById('aiResults').innerHTML = '';
+
+                log(`Starting to check ${totalCombos} combos...`, 'info');
+
+                const delay = parseInt(document.getElementById('requestDelay').value) || 1000;
+
+                for (const combo of combos) {
+                    if (!isChecking) break;
+
+                    await checkCombo(combo);
+                    checkedCombos++;
+                    updateProgress();
+
+                    if (delay > 0) {
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+
+                isChecking = false;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('comboInput').disabled = false;
+                log('Checking completed!', 'success');
+
+            } catch (error) {
+                log(`Error during checking: ${error.message}`, 'error');
+                stopChecking();
+            }
+        }
+
+        function stopChecking() {
+            isChecking = false;
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('comboInput').disabled = false;
+            log('Checking stopped by user', 'warning');
+        }
+
+        function clearAll() {
+            document.getElementById('comboInput').value = '';
+            document.getElementById('logContainer').innerHTML = '';
+            document.getElementById('aiResults').innerHTML = '';
+            document.getElementById('comboFile').value = '';
+            
+            totalCombos = 0;
+            checkedCombos = 0;
+            successCount = 0;
+            failedCount = 0;
+            successResults = [];
+            failedResults = [];
+            aiAnalysisResults = [];
+            
+            updateProgress();
+            log('All data cleared', 'info');
         }
     </script>
 </body>
